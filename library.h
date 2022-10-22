@@ -46,7 +46,7 @@ namespace oAuth2 {
   class AuthGrantRequest {
     public:
       AUTH_GRANT_TYPE type;
-      std::string _response_type; //depend on type
+      std::string response_type; //depend on type
       std::string client_id;
       std::string redirect_url;
       std::map<std::string,std::string> scope;
@@ -54,15 +54,16 @@ namespace oAuth2 {
 
   class AuthGrantResponse {
   public:
-        
-  }
-
-  class AuthGrantRespnse {
 
   };
 
   class AuthGrantError : public std::exception {
 
+  };
+
+  class AuthGrant {
+    public:
+      virtual AuthGrantResponse getAuthorizationGrant (AuthGrantRequest req) = 0;
   };
 
   class Client {
