@@ -3,6 +3,7 @@
 #include<vector>
 #include<map>
 
+// POCOs //
 namespace models {
   enum class CLIENT_TYPE {
     CONFIDENTIAL, PUBLIC

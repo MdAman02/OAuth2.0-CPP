@@ -2,7 +2,7 @@
 #include<cmath>
 #include<exception>
 #include "models.hpp"
-#include "repositories.h"
+#include "repositories.hpp"
 
 // demo user data
 std::string userId1 = "dasd-dsa54-gfd87-fghg3";
@@ -96,5 +96,55 @@ namespace repository {
       throw "Client Authorization Code doesnt exist";
     }
     return authGrant->isExpired = true;
+  }
+
+  // CLIENT_REPOSITORY //
+  std::pair<std::string, std::string> ClientRepository::generateClientCredentials() {
+    // use some uniqId
+    return std::pair<std::string, std::string>();
+  }
+
+  const models::Client& ClientRepository::createClient (models::CLIENT_TYPE type, std::map<std::string, std::string> state, std::string redirUri) {
+    std::pair<std::string, std::string> t = this->generateClientCredentials();
+    const std::string clientId = t.first, clientSecret = t.second;
+    const models::Client client(clientId, clientSecret, true, redirUri, state, models::CLIENT_TYPE::CONFIDENTIAL);
+    return this->_provider[clientId] = client;
+  }
+
+  const models::Client* ClientRepository::getClient (std::string clientId) {
+    try
+    {
+      models::Client &client = this->_provider.at(clientId);
+      return &client;
+    }
+    catch(const std::exception& e)
+    {
+      return nullptr;
+    }
+  }
+
+  const models::Client* ClientRepository::updateClient (std::string clientId, models::Client client) {
+    if (client.client_id != clientId)
+      throw "update object must have mathed clientId";
+    this->_provider[clientId] = client;
+    return &client;
+  }
+  
+  bool ClientRepository::deleteClient (std::string clientId) {
+    try {
+      this->_provider.erase(clientId);
+      return true;
+    } catch(const std::exception& e) {
+      return false;
+    }
+  }
+
+  std::pair<bool, const models::Client*> ClientRepository::authenticateClient (std::string clientId, std::string clientSecret) {
+    const models::Client* client = this->getClient(clientId);
+    if (client == nullptr)
+      return std::make_pair(false, nullptr);
+    if (client->client_secret != clientSecret)
+      return std::make_pair(false, client);
+    return std::make_pair(true, client);
   }
 }

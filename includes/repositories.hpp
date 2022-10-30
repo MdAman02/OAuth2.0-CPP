@@ -30,4 +30,16 @@ namespace repository {
     models::AuthGrant createGrant(std::string clientId, std::string userId, std::vector<std::string> permissions);
     bool revokeGrant(std::string authenticationCode);
   };
+
+    class ClientRepository {
+    private:
+      std::map<std::string, models::Client> _provider; // clientId to Client object
+      std::pair<std::string, std::string> generateClientCredentials();
+    public:
+      const models::Client& createClient (models::CLIENT_TYPE type, std::map<std::string, std::string> state, std::string redirection_uri);
+      const models::Client* getClient (std::string clientId);
+      const models::Client* updateClient (std::string clientId, models::Client client);
+      bool deleteClient (std::string clientId);
+      std::pair<bool, const models::Client*> authenticateClient (std::string clientId, std::string clientSecret);
+    };
 }
