@@ -40,6 +40,5 @@ namespace repository {
       const models::Client* getClient (std::string clientId);
       const models::Client* updateClient (std::string clientId, models::Client client);
       bool deleteClient (std::string clientId);
-      std::pair<bool, const models::Client*> authenticateClient (std::string clientId, std::string clientSecret);
     };
 }
